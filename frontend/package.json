@@ -10,9 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
     "@ant-design/pro-chat": "^1.15.2",
+    "@tanstack/react-router": "^1.51.6",
     "@tanstack/router": "0.0.1-beta.53",
     "antd": "^5.20.3",
+    "antd-style": "^3.6.2",
+    "axios": "^1.7.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
