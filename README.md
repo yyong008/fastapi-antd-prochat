@@ -1,8 +1,8 @@
 # fastapi-antd-prochat
 
-## 标题
+![](./docs/images/chat-pages.png)
+![](./docs/images/chat-contents.png)
 
-当 FastAPI 遇到 Antd ProChat 实现一个自己的 AI 聊天软件
 
 ## 技术选型
 
