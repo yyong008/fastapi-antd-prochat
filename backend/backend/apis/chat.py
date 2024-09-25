@@ -1,31 +1,57 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from fastapi.responses import StreamingResponse
 
-from backend.schemas.chat import ChatIn
-from backend.zhipu_ai.client import client
-import json
+from backend.schemas.chat import ChatIn, ChatInTitle
+from backend.schemas.response import ResponseModel, ResponseSuccessModel
+from backend.services.chat_service import (
+    create_chat_service,
+    delete_chat_by_id_service,
+    get_all_chats_service,
+    get_chat_by_id_service,
+    update_chat_service,
+    update_chat_title_service,
+)
 
 router = APIRouter()
 
 
-def generate_stream(response):
-    for chunk in response:
-        if chunk.choices[0].delta:
-            delta = chunk.choices[0].delta
-            data = {"content": delta.content, "role": delta.role}
-            print(data)
-            yield f"data: {json.dumps(data)}\n\n"
-
-
 @router.post("/chat")
-def chat(content: ChatIn):
-    print(content)
-    response = client.chat.completions.create(
-        model="glm-4-flash",  # 填写需要调用的模型编码
-        messages=[
-            {"role": "user", "content": content.content},
-        ],
-        stream=True,
+def chat(chatIn: ChatIn, background_tasks: BackgroundTasks):
+    gsn = create_chat_service(chatIn, background_tasks)
+    return StreamingResponse(
+        gsn,
+        media_type="text/event-stream",
     )
-    # 使用 StreamingResponse 进行流式响应
-    return StreamingResponse(generate_stream(response), media_type="text/event-stream")
+
+
+@router.put("/chat/{id}")
+def chat_update(id: str, chatIn: ChatIn, background_tasks: BackgroundTasks):
+    gsn = update_chat_service(id, chatIn, background_tasks)
+    return StreamingResponse(
+        gsn,
+        media_type="text/event-stream",
+        status_code=200
+    )
+
+
+@router.get("/chats", response_model=ResponseModel)
+def get_all_chats_list():
+    data = get_all_chats_service()
+    return ResponseSuccessModel(data=data)
+
+
+@router.get("/chat/{id}", response_model=ResponseModel)
+def get_chat(id: str):
+    data = get_chat_by_id_service(id)
+    return ResponseSuccessModel(data=data)
+
+
+@router.delete("/chat/{id}", response_model=ResponseModel)
+def delete_chat_by_id(id: str):
+    data = delete_chat_by_id_service(id)
+    return ResponseSuccessModel(data=data)
+
+@router.put("/chat/{id}/title")
+def chat_update_title(id: str, title: ChatInTitle):
+    data = update_chat_title_service(id, title.title)
+    return ResponseSuccessModel(data=data)

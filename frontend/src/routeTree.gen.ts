@@ -12,13 +12,10 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as ChatImport } from './routes/chat'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as AdminImport } from './routes/_admin'
-import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutAboutImport } from './routes/_layout/about'
-import { Route as AuthLoginImport } from './routes/_auth/login'
-import { Route as AdminDashboardImport } from './routes/_admin/dashboard'
+import { Route as IndexImport } from './routes/index'
+import { Route as ChatChatImport } from './routes/chat/_chat'
+import { Route as ChatChatIndexImport } from './routes/chat/_chat.index'
+import { Route as ChatChatIdImport } from './routes/chat/_chat.$id'
 
 // Create/Update Routes
 
@@ -27,64 +24,35 @@ const ChatRoute = ChatImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AuthRoute = AuthImport.update({
-  id: '/_auth',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AdminRoute = AdminImport.update({
-  id: '/_admin',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LayoutIndexRoute = LayoutIndexImport.update({
+const IndexRoute = IndexImport.update({
   path: '/',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutAboutRoute = LayoutAboutImport.update({
-  path: '/about',
-  getParentRoute: () => LayoutRoute,
+const ChatChatRoute = ChatChatImport.update({
+  id: '/_chat',
+  getParentRoute: () => ChatRoute,
 } as any)
 
-const AuthLoginRoute = AuthLoginImport.update({
-  path: '/login',
-  getParentRoute: () => AuthRoute,
+const ChatChatIndexRoute = ChatChatIndexImport.update({
+  path: '/',
+  getParentRoute: () => ChatChatRoute,
 } as any)
 
-const AdminDashboardRoute = AdminDashboardImport.update({
-  path: '/dashboard',
-  getParentRoute: () => AdminRoute,
+const ChatChatIdRoute = ChatChatIdImport.update({
+  path: '/$id',
+  getParentRoute: () => ChatChatRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_admin': {
-      id: '/_admin'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/_layout': {
-      id: '/_layout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof LayoutImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/chat': {
@@ -94,33 +62,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatImport
       parentRoute: typeof rootRoute
     }
-    '/_admin/dashboard': {
-      id: '/_admin/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AdminDashboardImport
-      parentRoute: typeof AdminImport
+    '/chat/_chat': {
+      id: '/chat/_chat'
+      path: ''
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatChatImport
+      parentRoute: typeof ChatImport
     }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof AuthImport
+    '/chat/_chat/$id': {
+      id: '/chat/_chat/$id'
+      path: '/$id'
+      fullPath: '/chat/$id'
+      preLoaderRoute: typeof ChatChatIdImport
+      parentRoute: typeof ChatChatImport
     }
-    '/_layout/about': {
-      id: '/_layout/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof LayoutAboutImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/': {
-      id: '/_layout/'
+    '/chat/_chat/': {
+      id: '/chat/_chat/'
       path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexImport
-      parentRoute: typeof LayoutImport
+      fullPath: '/chat/'
+      preLoaderRoute: typeof ChatChatIndexImport
+      parentRoute: typeof ChatChatImport
     }
   }
 }
@@ -128,10 +89,13 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  AdminRoute: AdminRoute.addChildren({ AdminDashboardRoute }),
-  AuthRoute: AuthRoute.addChildren({ AuthLoginRoute }),
-  LayoutRoute: LayoutRoute.addChildren({ LayoutAboutRoute, LayoutIndexRoute }),
-  ChatRoute,
+  IndexRoute,
+  ChatRoute: ChatRoute.addChildren({
+    ChatChatRoute: ChatChatRoute.addChildren({
+      ChatChatIdRoute,
+      ChatChatIndexRoute,
+    }),
+  }),
 })
 
 /* prettier-ignore-end */
@@ -142,49 +106,34 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_admin",
-        "/_auth",
-        "/_layout",
+        "/",
         "/chat"
       ]
     },
-    "/_admin": {
-      "filePath": "_admin.tsx",
-      "children": [
-        "/_admin/dashboard"
-      ]
-    },
-    "/_auth": {
-      "filePath": "_auth.tsx",
-      "children": [
-        "/_auth/login"
-      ]
-    },
-    "/_layout": {
-      "filePath": "_layout.tsx",
-      "children": [
-        "/_layout/about",
-        "/_layout/"
-      ]
+    "/": {
+      "filePath": "index.tsx"
     },
     "/chat": {
-      "filePath": "chat.tsx"
+      "filePath": "chat.tsx",
+      "children": [
+        "/chat/_chat"
+      ]
     },
-    "/_admin/dashboard": {
-      "filePath": "_admin/dashboard.tsx",
-      "parent": "/_admin"
+    "/chat/_chat": {
+      "filePath": "chat/_chat.tsx",
+      "parent": "/chat",
+      "children": [
+        "/chat/_chat/$id",
+        "/chat/_chat/"
+      ]
     },
-    "/_auth/login": {
-      "filePath": "_auth/login.tsx",
-      "parent": "/_auth"
+    "/chat/_chat/$id": {
+      "filePath": "chat/_chat.$id.tsx",
+      "parent": "/chat/_chat"
     },
-    "/_layout/about": {
-      "filePath": "_layout/about.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/": {
-      "filePath": "_layout/index.tsx",
-      "parent": "/_layout"
+    "/chat/_chat/": {
+      "filePath": "chat/_chat.index.tsx",
+      "parent": "/chat/_chat"
     }
   }
 }
