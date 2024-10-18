@@ -7,7 +7,8 @@ export const Route = createFileRoute('/')({
 })
 
 function HomeRoute() {
-  return <div className='w-[100vw] h-[100vh] flex justify-center items-centerv border-dashed'>
+  return <div className='w-[100vw] h-[100vh] flex flex-col justify-center items-centerv border-dashed'>
     <Link to="/chat" className='text-2xl font-bold  hover:text-blue-700 transition-colors duration-300 flex items-center'>Go Chat <ArrowRightOutlined /></Link>
+    <Link to="/langchain-chat" className='text-2xl font-bold  hover:text-blue-700 transition-colors duration-300 flex items-center'>Go LangChain Chat <ArrowRightOutlined /></Link>
   </div>
 }

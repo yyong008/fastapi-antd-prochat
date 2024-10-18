@@ -11,13 +11,21 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LangchainChatImport } from './routes/langchain-chat'
 import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
 import { Route as ChatChatImport } from './routes/chat/_chat'
+import { Route as LangchainChatLangchainChatIndexImport } from './routes/langchain-chat/_langchain-chat.index'
 import { Route as ChatChatIndexImport } from './routes/chat/_chat.index'
+import { Route as LangchainChatLangchainChatIdImport } from './routes/langchain-chat/_langchain-chat.$id'
 import { Route as ChatChatIdImport } from './routes/chat/_chat.$id'
 
 // Create/Update Routes
+
+const LangchainChatRoute = LangchainChatImport.update({
+  path: '/langchain-chat',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ChatRoute = ChatImport.update({
   path: '/chat',
@@ -34,10 +42,22 @@ const ChatChatRoute = ChatChatImport.update({
   getParentRoute: () => ChatRoute,
 } as any)
 
+const LangchainChatLangchainChatIndexRoute =
+  LangchainChatLangchainChatIndexImport.update({
+    path: '/',
+    getParentRoute: () => LangchainChatRoute,
+  } as any)
+
 const ChatChatIndexRoute = ChatChatIndexImport.update({
   path: '/',
   getParentRoute: () => ChatChatRoute,
 } as any)
+
+const LangchainChatLangchainChatIdRoute =
+  LangchainChatLangchainChatIdImport.update({
+    path: '/$id',
+    getParentRoute: () => LangchainChatRoute,
+  } as any)
 
 const ChatChatIdRoute = ChatChatIdImport.update({
   path: '/$id',
@@ -62,6 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatImport
       parentRoute: typeof rootRoute
     }
+    '/langchain-chat': {
+      id: '/langchain-chat'
+      path: '/langchain-chat'
+      fullPath: '/langchain-chat'
+      preLoaderRoute: typeof LangchainChatImport
+      parentRoute: typeof rootRoute
+    }
     '/chat/_chat': {
       id: '/chat/_chat'
       path: ''
@@ -76,12 +103,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatChatIdImport
       parentRoute: typeof ChatChatImport
     }
+    '/langchain-chat/_langchain-chat/$id': {
+      id: '/langchain-chat/_langchain-chat/$id'
+      path: '/$id'
+      fullPath: '/langchain-chat/$id'
+      preLoaderRoute: typeof LangchainChatLangchainChatIdImport
+      parentRoute: typeof LangchainChatImport
+    }
     '/chat/_chat/': {
       id: '/chat/_chat/'
       path: '/'
       fullPath: '/chat/'
       preLoaderRoute: typeof ChatChatIndexImport
       parentRoute: typeof ChatChatImport
+    }
+    '/langchain-chat/_langchain-chat/': {
+      id: '/langchain-chat/_langchain-chat/'
+      path: '/'
+      fullPath: '/langchain-chat/'
+      preLoaderRoute: typeof LangchainChatLangchainChatIndexImport
+      parentRoute: typeof LangchainChatImport
     }
   }
 }
@@ -96,6 +137,10 @@ export const routeTree = rootRoute.addChildren({
       ChatChatIndexRoute,
     }),
   }),
+  LangchainChatRoute: LangchainChatRoute.addChildren({
+    LangchainChatLangchainChatIdRoute,
+    LangchainChatLangchainChatIndexRoute,
+  }),
 })
 
 /* prettier-ignore-end */
@@ -107,7 +152,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/chat"
+        "/chat",
+        "/langchain-chat"
       ]
     },
     "/": {
@@ -117,6 +163,13 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "chat.tsx",
       "children": [
         "/chat/_chat"
+      ]
+    },
+    "/langchain-chat": {
+      "filePath": "langchain-chat.tsx",
+      "children": [
+        "/langchain-chat/_langchain-chat/$id",
+        "/langchain-chat/_langchain-chat/"
       ]
     },
     "/chat/_chat": {
@@ -131,9 +184,17 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "chat/_chat.$id.tsx",
       "parent": "/chat/_chat"
     },
+    "/langchain-chat/_langchain-chat/$id": {
+      "filePath": "langchain-chat/_langchain-chat.$id.tsx",
+      "parent": "/langchain-chat"
+    },
     "/chat/_chat/": {
       "filePath": "chat/_chat.index.tsx",
       "parent": "/chat/_chat"
+    },
+    "/langchain-chat/_langchain-chat/": {
+      "filePath": "langchain-chat/_langchain-chat.index.tsx",
+      "parent": "/langchain-chat"
     }
   }
 }
