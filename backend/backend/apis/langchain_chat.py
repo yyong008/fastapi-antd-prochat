@@ -19,7 +19,7 @@ def chat(chatIn: ChatIn, background_tasks: BackgroundTasks):
 def chat_update(id: str, chatIn: ChatIn, background_tasks: BackgroundTasks):
     gsn = update_chat_service(id, chatIn, background_tasks)
     return StreamingResponse(
-        gsn,
+        gsn(),
         media_type="text/event-stream",
         status_code=200
     )

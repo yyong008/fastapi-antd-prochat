@@ -14,7 +14,7 @@ def last_chunk_new(chunk, chat_id, before_messages, background_tasks, content_in
         role_dict = {
             "system": "system",
             "human": "user",
-            "assistant": "assistant",
+            "ai": "assistant",
         }
         for bm in before_messages:
             mm = {
@@ -30,20 +30,32 @@ def last_chunk_new(chunk, chat_id, before_messages, background_tasks, content_in
     return
 
 
-def last_chunk_update(chunk, chat_id, messages, background_tasks, content_in_db):
-    if chunk.choices[0].finish_reason == "stop":
+def last_chunk_update(chunk, chat_id, before_messages, background_tasks, content_in_db):
+    if (
+        chunk
+        and hasattr(chunk, 'response_metadata')
+    ):
+        finish_reason = chunk.response_metadata.get("finish_reason")
+        if not finish_reason == "stop":
+            return
         msgs = []
-        for m in messages:
-            mm = m.model_dump()
-            if not hasattr(mm, "id"):
-                mm["id"] = chat_id
+        role_dict = {
+            "system": "system",
+            "human": "user",
+            "ai": "assistant",
+        }
+        for bm in before_messages:
+            mm = {
+                "id": chat_id,
+                "role": role_dict[bm.type],
+                "content": bm.content,
+            }
             msgs.append(mm)
         msgs.append({"id": chat_id, "role": "assistant", "content": content_in_db})
         chat_content = f"{json.dumps(msgs)}"
         background_tasks.add_task(store_db_update, chat_id, chat_content)
         return
     return
-
 
 def generate_stream_new(
     response,

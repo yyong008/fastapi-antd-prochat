@@ -1,7 +1,7 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
-import { ChatSide } from "../components/ChatSide";
+import { ChatSide } from "../components/ChatSideLangChain";
 import { Layout } from "antd";
 import { chatContext } from "../context/index";
 import { getChats } from "../apis/chat";

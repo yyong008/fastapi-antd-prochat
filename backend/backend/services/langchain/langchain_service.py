@@ -1,6 +1,7 @@
 import uuid
 from fastapi import APIRouter, BackgroundTasks
 from langchain_openai import ChatOpenAI
+from backend.services.langchain.langchain_chat_stream import last_chunk_update
 from backend.services.langchain.langchain_chat_stream import last_chunk_new
 from backend.services.langchain.langchain_chat_stream import yield_string
 from backend.dals.chat import (
@@ -54,14 +55,43 @@ def create_chat_service(chatIn, background_tasks: BackgroundTasks):
 
 
 def update_chat_service(id, chatIn, background_tasks: BackgroundTasks):
-    model = "glm-4-flash"
-    messages = chatIn.messages
-    response = client.chat.completions.create(
-        model=model,
-        messages=[message.model_dump() for message in messages],
-        stream=True,
+    # model = "glm-4-flash"
+    # messages = chatIn.messages
+    # response = client.chat.completions.create(
+    #     model=model,
+    #     messages=[message.model_dump() for message in messages],
+    #     stream=True,
+    # )
+    # return generate_stream_update(response, background_tasks, messages, id)
+    llm = ChatOpenAI(
+        temperature=0.95,
+        model="glm-4-flash",
+        openai_api_key=api_key,
+        openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
     )
-    return generate_stream_update(response, background_tasks, messages, id)
+    msg = []
+    messages = chatIn.messages
+    for chat in messages:
+        role = chat.role
+        if role == "user":
+            msg.append(HumanMessage(content=chat.content))
+        elif role == "system":
+            msg.append(SystemMessage(content=chat.content))
+        elif role == 'assistant':
+            msg.append(AIMessage(content=chat.content))
+    gsn = llm.stream(msg)
+
+    def gen():
+        content_in_db = ""
+        chat_id: None | str = id
+        for chunk in gsn:
+            content_in_db += chunk.content
+            last_chunk_update(
+                chunk, chat_id, msg, background_tasks, content_in_db
+            )
+            yield yield_string(chat_id=chat_id, content=chunk.content, role="assistant")
+
+    return gen
 
 
 def get_all_chats_service():
