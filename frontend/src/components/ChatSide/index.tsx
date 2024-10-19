@@ -1,5 +1,5 @@
 import { EditOutlined, HomeOutlined, MenuOutlined } from "@ant-design/icons";
-import { Input, Modal, Popover, message } from "antd";
+import { Input, Modal, Popover, Spin, message } from "antd";
 import {
   Link,
   useNavigate,
@@ -10,7 +10,7 @@ import { useContext, useEffect, useState } from "react";
 
 import { chatContext } from "../../context/index";
 
-export const ChatSide = () => {
+export const ChatSide = ({ isLoading}) => {
   const { chats } = useContext(chatContext) as any;
   return (
     <div className="w-[200px] text-white p-[20px] h-[100vh] overflow-y-scroll">
@@ -26,6 +26,12 @@ export const ChatSide = () => {
           <EditOutlined />
         </div>
       </Link>
+      <Link to="/langchain-chat">
+        <div className={`flex justify-between p-[10px] rounded-md`}>
+          <span>新建 langchain 聊天</span>
+          <EditOutlined />
+        </div>
+      </Link>
       <div className="">
         <div>
           <div className="flex justify-between p-[10px] ">
@@ -33,7 +39,9 @@ export const ChatSide = () => {
             <MenuOutlined />
           </div>
         </div>
-        <ChatsList chats={chats ?? []} />
+        <Spin spinning={isLoading}>
+          <ChatsList chats={chats ?? []} />
+        </Spin>
       </div>
     </div>
   );

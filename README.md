@@ -7,7 +7,7 @@
 ## 技术选型
 
 
-- 后端：Python (poetry) + fastapi
+- 后端：Python (poetry) + fastapi + langchain
 - 前端：react + antd prochat + tanstack-router + tailwindcss
 - 存储 supabase (本地)
 - AI: zhipu（glm-4-flash 模型）

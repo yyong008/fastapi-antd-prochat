@@ -1,57 +1,87 @@
+import uuid
 from fastapi import APIRouter, BackgroundTasks
-from fastapi.responses import StreamingResponse
-
-from backend.schemas.chat import ChatIn, ChatInTitle
-from backend.schemas.response import ResponseModel, ResponseSuccessModel
-from backend.services.langchain.langchain_service import (
-    create_chat_service,
-    delete_chat_by_id_service,
-    get_all_chats_service,
-    get_chat_by_id_service,
-    update_chat_service,
-    update_chat_title_service,
+from langchain_openai import ChatOpenAI
+from backend.services.langchain.langchain_chat_stream import last_chunk_new
+from backend.services.langchain.langchain_chat_stream import yield_string
+from backend.dals.chat import (
+    delete_chat_by_id,
+    get_all_chats,
+    get_chat_by_id,
+    update_chat,
 )
+from .langchain_chat_stream import generate_stream_new, generate_stream_update
+from backend.zhipu_ai.client import client
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from backend.config.config import get_settings
 
-router = APIRouter(prefix='langchain', tags=["langchain"])
+api_key = get_settings().api_key
+
+router = APIRouter()
 
 
-@router.post("/langchain/chat")
-def chat(chatIn: ChatIn, background_tasks: BackgroundTasks):
-    gsn = create_chat_service(chatIn, background_tasks)
-    return StreamingResponse(
-        gsn,
-        media_type="text/event-stream",
+def create_chat_service(chatIn, background_tasks: BackgroundTasks):
+    llm = ChatOpenAI(
+        temperature=0.95,
+        model="glm-4-flash",
+        openai_api_key=api_key,
+        openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
     )
+    msg = []
+    messages = chatIn.messages
+    for chat in messages:
+        role = chat.role
+        if role == "user":
+            msg.append(HumanMessage(content=chat.content))
+        elif role == "system":
+            msg.append(SystemMessage(content=chat.content))
+        elif role == 'assistant':
+            msg.append(AIMessage(content=chat.content))
+    gsn = llm.stream(msg)
+
+    def gen():
+        content_in_db = ""
+        chat_id: None | str = None
+        for chunk in gsn:
+            content_in_db += chunk.content
+            if not chat_id:
+              chat_id = str(uuid.uuid4())
+            last_chunk_new(
+                chunk, chat_id, msg, background_tasks, content_in_db
+            )
+            yield yield_string(chat_id=chat_id, content=chunk.content, role="assistant")
+
+    return gen
 
 
-@router.put("/chat/{id}")
-def chat_update(id: str, chatIn: ChatIn, background_tasks: BackgroundTasks):
-    gsn = update_chat_service(id, chatIn, background_tasks)
-    return StreamingResponse(
-        gsn,
-        media_type="text/event-stream",
-        status_code=200
+def update_chat_service(id, chatIn, background_tasks: BackgroundTasks):
+    model = "glm-4-flash"
+    messages = chatIn.messages
+    response = client.chat.completions.create(
+        model=model,
+        messages=[message.model_dump() for message in messages],
+        stream=True,
     )
+    return generate_stream_update(response, background_tasks, messages, id)
 
 
-@router.get("/chats", response_model=ResponseModel)
-def get_all_chats_list():
-    data = get_all_chats_service()
-    return ResponseSuccessModel(data=data)
+def get_all_chats_service():
+    data = get_all_chats()
+    return data
 
 
-@router.get("/chat/{id}", response_model=ResponseModel)
-def get_chat(id: str):
-    data = get_chat_by_id_service(id)
-    return ResponseSuccessModel(data=data)
+def get_chat_by_id_service(id: str):
+    data = get_chat_by_id(id)
+    return data
 
 
-@router.delete("/chat/{id}", response_model=ResponseModel)
-def delete_chat_by_id(id: str):
-    data = delete_chat_by_id_service(id)
-    return ResponseSuccessModel(data=data)
+def delete_chat_by_id_service(id: str):
+    data = delete_chat_by_id(id)
+    return data
 
-@router.put("/chat/{id}/title")
-def chat_update_title(id: str, title: ChatInTitle):
-    data = update_chat_title_service(id, title.title)
-    return ResponseSuccessModel(data=data)
+
+def update_chat_title_service(id: str, title: str):
+    data_in_db = get_chat_by_id(id)
+    data_in_db["title"] = title
+
+    data = update_chat(id, data_in_db)
+    return data
