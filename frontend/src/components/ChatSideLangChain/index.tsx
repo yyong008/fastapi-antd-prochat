@@ -13,7 +13,7 @@ import { chatContext } from "../../context/index";
 export const ChatSide = ({ isLoading}) => {
   const { chats } = useContext(chatContext) as any;
   return (
-    <div className="w-[200px] text-white p-[20px] h-[100vh] overflow-y-scroll">
+    <div className="w-[200px] text-white p-[20px] h-[100vh] overflow-y-scroll bg-yellow-600">
       <Link to="/">
         <div className="flex justify-between p-[10px]">
           <span>主页</span>
