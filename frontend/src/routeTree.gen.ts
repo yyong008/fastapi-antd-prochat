@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LangchainChatImport } from './routes/langchain-chat'
 import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
+import { Route as TanslateIndexImport } from './routes/tanslate/index'
 import { Route as ChatChatImport } from './routes/chat/_chat'
 import { Route as LangchainChatLangchainChatIndexImport } from './routes/langchain-chat/_langchain-chat.index'
 import { Route as ChatChatIndexImport } from './routes/chat/_chat.index'
@@ -34,6 +35,11 @@ const ChatRoute = ChatImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TanslateIndexRoute = TanslateIndexImport.update({
+  path: '/tanslate/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -96,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatChatImport
       parentRoute: typeof ChatImport
     }
+    '/tanslate/': {
+      id: '/tanslate/'
+      path: '/tanslate'
+      fullPath: '/tanslate'
+      preLoaderRoute: typeof TanslateIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/chat/_chat/$id': {
       id: '/chat/_chat/$id'
       path: '/$id'
@@ -141,6 +154,7 @@ export const routeTree = rootRoute.addChildren({
     LangchainChatLangchainChatIdRoute,
     LangchainChatLangchainChatIndexRoute,
   }),
+  TanslateIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -153,7 +167,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/chat",
-        "/langchain-chat"
+        "/langchain-chat",
+        "/tanslate/"
       ]
     },
     "/": {
@@ -179,6 +194,9 @@ export const routeTree = rootRoute.addChildren({
         "/chat/_chat/$id",
         "/chat/_chat/"
       ]
+    },
+    "/tanslate/": {
+      "filePath": "tanslate/index.tsx"
     },
     "/chat/_chat/$id": {
       "filePath": "chat/_chat.$id.tsx",
