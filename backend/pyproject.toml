@@ -15,6 +15,9 @@ supabase = "^2.7.3"
 langchain = "^0.3.3"
 langchainhub = "^0.1.21"
 langchain-openai = "^0.2.2"
+langchain-community = "^0.3.3"
+sentence-transformers = "^3.2.1"
+faiss-cpu = "^1.9.0"
 
 
 [build-system]
