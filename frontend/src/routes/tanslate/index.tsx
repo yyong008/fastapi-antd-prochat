@@ -1,6 +1,7 @@
-import { Button, Input, Select, message } from "antd";
+import { Button, FloatButton, Input, Select, message } from "antd";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
-import { createFileRoute } from "@tanstack/react-router";
+import { HomeOutlined } from "@ant-design/icons";
 import { createTranslate } from "../../apis/transalte";
 import { useState } from "react";
 
@@ -34,6 +35,11 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col justify-center items-center gap-6">
+      <div>
+        <Link to="/">
+          <FloatButton type="primary" icon={<HomeOutlined />}></FloatButton>
+        </Link>
+      </div>
       <div className="flex flex-col justify-end items-center my-[20px] ">
         <div className="text-[50px] font-boldchat">AI 翻译</div>
         <div className="text-[20px]">选择语言</div>
@@ -73,7 +79,7 @@ function RouteComponent() {
             }}
           />
         </div>
-        <div className="h-[500px] ">
+        <div className="h-[300px] ">
           <Input.TextArea
             style={{
               height: "100%",
@@ -88,8 +94,8 @@ function RouteComponent() {
           type="primary"
           loading={loading}
           onClick={async () => {
-            if(!data.lang_from || !data.lang_to || !data.content) {
-              message.error('请填写完整');
+            if (!data.lang_from || !data.lang_to || !data.content) {
+              message.error("请填写完整");
               return;
             }
             setLoading(true);
