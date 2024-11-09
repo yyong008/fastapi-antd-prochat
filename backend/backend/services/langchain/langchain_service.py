@@ -1,6 +1,8 @@
 import uuid
+
 from fastapi import APIRouter, BackgroundTasks
-from langchain_openai import ChatOpenAI
+from backend.utils.message import format_messages
+from backend.langchain.model import create_model
 from backend.services.langchain.langchain_chat_stream import last_chunk_update
 from backend.services.langchain.langchain_chat_stream import last_chunk_new
 from backend.services.langchain.langchain_chat_stream import yield_string
@@ -10,9 +12,7 @@ from backend.dals.chat import (
     get_chat_by_id,
     update_chat,
 )
-from .langchain_chat_stream import generate_stream_new, generate_stream_update
-from backend.zhipu_ai.client import client
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+
 from backend.config.config import get_settings
 
 api_key = get_settings().api_key
@@ -21,22 +21,8 @@ router = APIRouter()
 
 
 def create_chat_service(chatIn, background_tasks: BackgroundTasks):
-    llm = ChatOpenAI(
-        temperature=0.95,
-        model="glm-4-flash",
-        openai_api_key=api_key,
-        openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
-    )
-    msg = []
-    messages = chatIn.messages
-    for chat in messages:
-        role = chat.role
-        if role == "user":
-            msg.append(HumanMessage(content=chat.content))
-        elif role == "system":
-            msg.append(SystemMessage(content=chat.content))
-        elif role == 'assistant':
-            msg.append(AIMessage(content=chat.content))
+    llm = create_model() 
+    msg = format_messages(chatIn.messages)
     gsn = llm.stream(msg)
 
     def gen():
@@ -55,30 +41,8 @@ def create_chat_service(chatIn, background_tasks: BackgroundTasks):
 
 
 def update_chat_service(id, chatIn, background_tasks: BackgroundTasks):
-    # model = "glm-4-flash"
-    # messages = chatIn.messages
-    # response = client.chat.completions.create(
-    #     model=model,
-    #     messages=[message.model_dump() for message in messages],
-    #     stream=True,
-    # )
-    # return generate_stream_update(response, background_tasks, messages, id)
-    llm = ChatOpenAI(
-        temperature=0.95,
-        model="glm-4-flash",
-        openai_api_key=api_key,
-        openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
-    )
-    msg = []
-    messages = chatIn.messages
-    for chat in messages:
-        role = chat.role
-        if role == "user":
-            msg.append(HumanMessage(content=chat.content))
-        elif role == "system":
-            msg.append(SystemMessage(content=chat.content))
-        elif role == 'assistant':
-            msg.append(AIMessage(content=chat.content))
+    llm = create_model()
+    msg = format_messages(chatIn.messages)
     gsn = llm.stream(msg)
 
     def gen():

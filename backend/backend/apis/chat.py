@@ -2,7 +2,7 @@ from fastapi import APIRouter, BackgroundTasks
 from fastapi.responses import StreamingResponse
 
 from backend.schemas.chat import ChatIn, ChatInTitle
-from backend.schemas.response import ResponseModel, ResponseSuccessModel
+from backend.schemas.response import RM, RMS
 from backend.services.chat_service import (
     create_chat_service,
     delete_chat_by_id_service,
@@ -34,24 +34,24 @@ def chat_update(id: str, chatIn: ChatIn, background_tasks: BackgroundTasks):
     )
 
 
-@router.get("/chats", response_model=ResponseModel)
+@router.get("/chats", response_model=RM)
 def get_all_chats_list():
     data = get_all_chats_service()
-    return ResponseSuccessModel(data=data)
+    return RMS(data=data)
 
 
-@router.get("/chat/{id}", response_model=ResponseModel)
+@router.get("/chat/{id}", response_model=RM)
 def get_chat(id: str):
     data = get_chat_by_id_service(id)
-    return ResponseSuccessModel(data=data)
+    return RMS(data=data)
 
 
-@router.delete("/chat/{id}", response_model=ResponseModel)
+@router.delete("/chat/{id}", response_model=RM)
 def delete_chat_by_id(id: str):
     data = delete_chat_by_id_service(id)
-    return ResponseSuccessModel(data=data)
+    return RMS(data=data)
 
 @router.put("/chat/{id}/title")
 def chat_update_title(id: str, title: ChatInTitle):
     data = update_chat_title_service(id, title.title)
-    return ResponseSuccessModel(data=data)
+    return RMS(data=data)
