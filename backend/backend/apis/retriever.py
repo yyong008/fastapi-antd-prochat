@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-from backend.langchain.huggingface_embeddings import create_huggingface_embeddings
+from backend.backend.langchain.rag.embeddings.huggingface_embeddings import create_huggingface_embeddings
 from backend.langchain.model import create_model
 from backend.schemas.embeddings import EmbeddingsIn
 from backend.config.config import get_settings

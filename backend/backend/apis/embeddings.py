@@ -5,9 +5,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from backend.langchain.model import create_model
-from backend.langchain.huggingface_embeddings import create_huggingface_embeddings
+from backend.backend.langchain.rag.embeddings.huggingface_embeddings import create_huggingface_embeddings
 from backend.schemas.embeddings import EmbeddingsIn
-from backend.langchain.vector_faiss import create_faiss_storage
+from backend.backend.langchain.rag.vector.vector_faiss import create_faiss_storage
 from backend.langchain.templates.question import question_template
 
 router = APIRouter()

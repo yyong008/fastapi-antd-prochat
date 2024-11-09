@@ -15,6 +15,8 @@ import { Route as LangchainChatImport } from './routes/langchain-chat'
 import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
 import { Route as TanslateIndexImport } from './routes/tanslate/index'
+import { Route as KnowledgeIndexImport } from './routes/knowledge/index'
+import { Route as KnowledgeIdImport } from './routes/knowledge/$id'
 import { Route as ChatChatImport } from './routes/chat/_chat'
 import { Route as LangchainChatLangchainChatIndexImport } from './routes/langchain-chat/_langchain-chat.index'
 import { Route as ChatChatIndexImport } from './routes/chat/_chat.index'
@@ -40,6 +42,16 @@ const IndexRoute = IndexImport.update({
 
 const TanslateIndexRoute = TanslateIndexImport.update({
   path: '/tanslate/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const KnowledgeIndexRoute = KnowledgeIndexImport.update({
+  path: '/knowledge/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const KnowledgeIdRoute = KnowledgeIdImport.update({
+  path: '/knowledge/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,6 +114,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatChatImport
       parentRoute: typeof ChatImport
     }
+    '/knowledge/$id': {
+      id: '/knowledge/$id'
+      path: '/knowledge/$id'
+      fullPath: '/knowledge/$id'
+      preLoaderRoute: typeof KnowledgeIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/knowledge/': {
+      id: '/knowledge/'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/tanslate/': {
       id: '/tanslate/'
       path: '/tanslate'
@@ -154,6 +180,8 @@ export const routeTree = rootRoute.addChildren({
     LangchainChatLangchainChatIdRoute,
     LangchainChatLangchainChatIndexRoute,
   }),
+  KnowledgeIdRoute,
+  KnowledgeIndexRoute,
   TanslateIndexRoute,
 })
 
@@ -168,6 +196,8 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/chat",
         "/langchain-chat",
+        "/knowledge/$id",
+        "/knowledge/",
         "/tanslate/"
       ]
     },
@@ -194,6 +224,12 @@ export const routeTree = rootRoute.addChildren({
         "/chat/_chat/$id",
         "/chat/_chat/"
       ]
+    },
+    "/knowledge/$id": {
+      "filePath": "knowledge/$id.tsx"
+    },
+    "/knowledge/": {
+      "filePath": "knowledge/index.tsx"
     },
     "/tanslate/": {
       "filePath": "tanslate/index.tsx"

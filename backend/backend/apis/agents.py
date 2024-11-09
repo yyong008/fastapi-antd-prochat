@@ -5,7 +5,7 @@ from langchain_core.messages import HumanMessage
 
 from langgraph.checkpoint import MemorySaver
 
-from backend.langchain.agent_executor import create_agent_executor
+from backend.backend.langchain.agent.agent_executor import create_agent_executor
 from backend.langchain.model import create_model
 
 
