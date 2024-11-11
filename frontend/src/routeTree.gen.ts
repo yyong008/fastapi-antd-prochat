@@ -14,7 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LangchainChatImport } from './routes/langchain-chat'
 import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
-import { Route as TanslateIndexImport } from './routes/tanslate/index'
+import { Route as TranslateIndexImport } from './routes/translate/index'
 import { Route as KnowledgeIndexImport } from './routes/knowledge/index'
 import { Route as KnowledgeIdImport } from './routes/knowledge/$id'
 import { Route as ChatChatImport } from './routes/chat/_chat'
@@ -40,8 +40,8 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const TanslateIndexRoute = TanslateIndexImport.update({
-  path: '/tanslate/',
+const TranslateIndexRoute = TranslateIndexImport.update({
+  path: '/translate/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -128,11 +128,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KnowledgeIndexImport
       parentRoute: typeof rootRoute
     }
-    '/tanslate/': {
-      id: '/tanslate/'
-      path: '/tanslate'
-      fullPath: '/tanslate'
-      preLoaderRoute: typeof TanslateIndexImport
+    '/translate/': {
+      id: '/translate/'
+      path: '/translate'
+      fullPath: '/translate'
+      preLoaderRoute: typeof TranslateIndexImport
       parentRoute: typeof rootRoute
     }
     '/chat/_chat/$id': {
@@ -182,7 +182,7 @@ export const routeTree = rootRoute.addChildren({
   }),
   KnowledgeIdRoute,
   KnowledgeIndexRoute,
-  TanslateIndexRoute,
+  TranslateIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -198,7 +198,7 @@ export const routeTree = rootRoute.addChildren({
         "/langchain-chat",
         "/knowledge/$id",
         "/knowledge/",
-        "/tanslate/"
+        "/translate/"
       ]
     },
     "/": {
@@ -231,8 +231,8 @@ export const routeTree = rootRoute.addChildren({
     "/knowledge/": {
       "filePath": "knowledge/index.tsx"
     },
-    "/tanslate/": {
-      "filePath": "tanslate/index.tsx"
+    "/translate/": {
+      "filePath": "translate/index.tsx"
     },
     "/chat/_chat/$id": {
       "filePath": "chat/_chat.$id.tsx",

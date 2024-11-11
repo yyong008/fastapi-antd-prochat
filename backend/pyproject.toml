@@ -21,6 +21,8 @@ faiss-cpu = "^1.9.0"
 langchain-chroma = "^0.1.4"
 langgraph = "^0.2.39"
 bs4 = "^0.0.2"
+python-multipart = "^0.0.17"
+pypdf2 = "^3.0.1"
 
 
 [build-system]

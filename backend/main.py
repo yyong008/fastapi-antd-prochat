@@ -3,6 +3,8 @@ from backend.apis.chat import router as chat_router
 from backend.apis.langchain_chat import router as langchain_chat_router
 from backend.apis.translate import router as translate_router
 from backend.apis.embeddings import router as embeddings_router
+from backend.apis.knowledge.index import router as knowledge_router
+from backend.apis.upload.file import router as file_router
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,6 +19,8 @@ app.include_router(langchain_chat_router, prefix="/api")
 app.include_router(translate_router, prefix="/api")
 app.include_router(translate_router, prefix="/api")
 app.include_router(embeddings_router, prefix="/api")
+app.include_router(knowledge_router, prefix="/api")
+app.include_router(file_router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,

@@ -163,3 +163,4 @@ cython_debug/
 
 node_modules
 todo.md
+*/static/upload/*

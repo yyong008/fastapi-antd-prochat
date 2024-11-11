@@ -1,4 +1,4 @@
-from langchain.message import HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 def format_messages(messages):
   msg = []

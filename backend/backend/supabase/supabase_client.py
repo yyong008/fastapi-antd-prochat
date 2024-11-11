@@ -26,6 +26,10 @@ class SupabaseClient:
         )
 
         return response.data
+    
+    def get_items_by_ids(self, table: str, ids: List[int]) -> List[Dict[str, Any]]:
+        response = self.supabase.table(table).select("*").in_("id", ids).execute()
+        return response.data
 
     def update_item(
         self, table: str, item_id: int, data: Dict[str, Any]

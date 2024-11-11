@@ -5,7 +5,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { createTranslate } from "../../apis/transalte";
 import { useState } from "react";
 
-export const Route = createFileRoute("/tanslate/")({
+export const Route = createFileRoute("/translate/")({
   component: RouteComponent,
 });
 
@@ -34,13 +34,13 @@ function RouteComponent() {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center gap-6">
+    <div className="flex flex-col w-[100vw] h-[100vh]  items-center gap-6 bg-[url('https://images.pexels.com/photos/8386487/pexels-photo-8386487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]">
       <div>
         <Link to="/">
           <FloatButton type="primary" icon={<HomeOutlined />}></FloatButton>
         </Link>
       </div>
-      <div className="flex flex-col justify-end items-center my-[20px] ">
+      <div className="flex flex-col justify-end items-center ">
         <div className="text-[50px] font-boldchat">AI 翻译</div>
         <div className="text-[20px]">选择语言</div>
         <div className="flex gap-3 my-[20px]">
