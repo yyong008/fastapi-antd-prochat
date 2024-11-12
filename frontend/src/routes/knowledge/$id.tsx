@@ -1,5 +1,10 @@
 import { Button, FloatButton, Upload, message } from "antd";
-import { HomeOutlined, UploadOutlined } from "@ant-design/icons";
+import { CheckCard, ProCard } from "@ant-design/pro-components";
+import {
+  FileTextOutlined,
+  HomeOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { Link, createFileRoute, useParams } from "@tanstack/react-router";
 import { addFileToKnowledge, getKnowledgeById } from "../../apis/knowledge";
 import { useEffect, useState } from "react";
@@ -9,7 +14,7 @@ export const Route = createFileRoute("/knowledge/$id")({
 });
 
 function RoutComponent() {
-  const { id } = useParams({ strict: true, from: ""});
+  const { id } = useParams({ strict: true, from: "" });
   const [selectFile, setSelectFile] = useState("");
   const [data, setData] = useState({
     info: {
@@ -33,13 +38,13 @@ function RoutComponent() {
     getData();
   }, []);
   return (
-    <div className="w-[100vw] h-[100vh] flex flex-col items-center bg-slate-50 bg-[url('https://images.pexels.com/photos/8386487/pexels-photo-8386487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]">
+    <div className="w-[100vw] min-h-[100vh] flex flex-col items-center bg-slate-50 bg-[url('https://images.pexels.com/photos/8386487/pexels-photo-8386487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]">
       <div className="flex flex-col items-center py-[20px]">
         <h1 className="text-[40px] font-bold">知识库： {data.info.name}</h1>
         <div className="text-[12px]">{data.info.description}</div>
       </div>
       <UploadFileContent id={id} />
-      <div className="flex">
+      <div className="flex gap-3">
         <FileList
           files={data.files}
           selectFile={selectFile}
@@ -83,7 +88,7 @@ function UploadFileContent(props) {
     }
   };
   return (
-    <Upload {...props} action="/api/upload/file" onChange={handleUploadChange}>
+    <Upload {...props} action="/api/upload/file" onChange={handleUploadChange} multiple={false}>
       <Button icon={<UploadOutlined />}>上传文件</Button>
     </Upload>
   );
@@ -91,23 +96,31 @@ function UploadFileContent(props) {
 
 function FileList({ files, selectFile, setSelectFile }) {
   return (
-    <div className="w-[20vw] ">
-      <h1>文件列表</h1>
-      <div>
+    <div className="">
+      <h1 className="text-[20px] font-bold">文件列表</h1>
+      <div></div>
+      <CheckCard.Group
+        onChange={(id) => {
+          setSelectFile(id);
+        }}
+      >
         {files?.map((file) => {
           return (
             <div>
-              <div
-                onClick={() => {
-                  setSelectFile(file.id);
-                }}
-              >
-                {file.meta.name}
-              </div>
+              <CheckCard
+                description={
+                  <div className="flex gap-3 ">
+                    <FileTextOutlined />
+                    <div className="line-clamp-1">{file.meta.name}</div>
+                  </div>
+                }
+                checked={file.id === selectFile}
+                value={file.id}
+              />
             </div>
           );
         })}
-      </div>
+      </CheckCard.Group>
     </div>
   );
 }
@@ -115,8 +128,8 @@ function FileList({ files, selectFile, setSelectFile }) {
 function FileContent({ selectFile, files }) {
   const content = files?.find((file) => file.id === selectFile)?.data?.content;
   return (
-    <div className="w-[60vw] ">
+    <ProCard className="w-[600px]">
       {!selectFile ? <div>请选择文件</div> : <div>{content}</div>}
-    </div>
+    </ProCard>
   );
 }
