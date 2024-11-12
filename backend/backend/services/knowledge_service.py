@@ -37,8 +37,6 @@ class KnowledgeService:
         """获取知识库详情"""
         try:
             info = KnownledgeDal.get_knowledge_by_id(id=id)
-            # list = KnownledgeDal.get_files_by_knowledge_id(id=id)
-            print(info['data'])
             if info['data'] is not None and info['data']['file_ids'] != []:
                files = FileDal.get_files_by_ids(ids=info["data"]["file_ids"])
             else:

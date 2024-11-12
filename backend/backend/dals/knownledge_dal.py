@@ -47,7 +47,6 @@ class KnownledgeDal:
       file = supabase_client.get_item_by_id("file",file_id)
       kl = supabase_client.get_item_by_id(self.chat_db_name, knowledge_id)
       if kl['data'] is None or kl['data']['file_ids'] is None and kl['data']['file_ids'] == []:
-        print(file["id"])
         kl['data'] = { 'file_ids': [file["id"]] }
       else:
         if file['id'] not in kl['data']['file_ids']:

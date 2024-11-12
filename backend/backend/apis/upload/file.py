@@ -1,4 +1,5 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
+from backend.langchain.rag.storage import StorageToVectorDB
 from backend.utils.pdf import extract_text_from_pdf
 from backend.services.file_service import FileService
 import uuid
@@ -8,9 +9,9 @@ router = APIRouter(prefix="/upload", tags=["Upload"])
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 设置最大文件大小为 2MB
 
+
 @router.post("/file")
 async def upload_file(file: UploadFile = File(...)):
-
     file_size = file.size  # 获取文件大小
 
     if file_size > MAX_FILE_SIZE:
@@ -25,8 +26,6 @@ async def upload_file(file: UploadFile = File(...)):
         content = await file.read()
         f.write(content)
 
-    
-
     if file.content_type == "application/pdf":
         content_str = extract_text_from_pdf(content)
     else:
@@ -39,19 +38,18 @@ async def upload_file(file: UploadFile = File(...)):
 
     _data = {
         "id": id,
-        "filename":  file_name,
+        "filename": file_name,
         "hash": hashlib.sha256(content).hexdigest(),
-        "data": {
-            "content": content_str
-        },
+        "data": {"content": content_str},
         "meta": {
             "collection_name": collection_name,
             "content_type": file.content_type,
             "name": file.filename,
-            "size": file.size
-        }
+            "size": file.size,
+        },
     }
     # 添加到数据库
     FileService.create_file_service(_data)
-
+    # 添加向量数据库
+    StorageToVectorDB.save_to_db(file_path=path, collection_name=collection_name)
     return _data
