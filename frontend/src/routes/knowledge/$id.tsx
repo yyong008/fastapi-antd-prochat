@@ -43,7 +43,7 @@ function RoutComponent() {
         <h1 className="text-[40px] font-bold">知识库： {data.info.name}</h1>
         <div className="text-[12px]">{data.info.description}</div>
       </div>
-      <UploadFileContent id={id} />
+      <UploadFileContent id={id} getData={getData} />
       <div className="flex gap-3">
         <FileList
           files={data.files}
@@ -80,6 +80,7 @@ function UploadFileContent(props) {
         });
 
         console.log("File content:", response.content);
+        props.getData()
       } else {
         message.error("服务器未返回文件内容");
       }
