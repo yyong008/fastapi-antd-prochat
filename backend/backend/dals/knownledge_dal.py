@@ -50,7 +50,7 @@ class KnownledgeDal:
         print(file["id"])
         kl['data'] = { 'file_ids': [file["id"]] }
       else:
-        if file.id not in kl['file_ids']:
+        if file['id'] not in kl['data']['file_ids']:
           kl['data']['file_ids'].append(file["id"])
       response = supabase_client.update_item(self.chat_db_name, knowledge_id, kl)
       return response
