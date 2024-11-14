@@ -13,6 +13,7 @@ function HomeRoute() {
       <ol>
         <LinkTo to="/chat" go="Go Chat" />
         <LinkTo to="/langchain-chat" go="Go LangChain Chat" />
+         <LinkTo to="/ollama" go="Go Ollama Chat" />
         <LinkTo to="/translate" go="Go Translate" />
         <LinkTo to="/knowledge" go="Go Knowledge" />
       </ol>

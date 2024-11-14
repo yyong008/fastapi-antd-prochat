@@ -1,5 +1,6 @@
 from langchain_openai import ChatOpenAI
 from backend.config.config import get_settings
+from langchain_ollama import ChatOllama
 
 api_key = get_settings().api_key
 
@@ -14,3 +15,7 @@ def create_model(model_name):
         openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
   )
   return model
+
+
+def create_ollama_chat_models(model_name):
+  return ChatOllama(model=model_name)

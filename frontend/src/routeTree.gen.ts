@@ -11,19 +11,28 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as OllamaImport } from './routes/ollama'
 import { Route as LangchainChatImport } from './routes/langchain-chat'
 import { Route as ChatImport } from './routes/chat'
 import { Route as IndexImport } from './routes/index'
 import { Route as TranslateIndexImport } from './routes/translate/index'
 import { Route as KnowledgeIndexImport } from './routes/knowledge/index'
+import { Route as OllamaOllamaImport } from './routes/ollama/_ollama'
 import { Route as KnowledgeIdImport } from './routes/knowledge/$id'
 import { Route as ChatChatImport } from './routes/chat/_chat'
+import { Route as OllamaOllamaIndexImport } from './routes/ollama/_ollama.index'
 import { Route as LangchainChatLangchainChatIndexImport } from './routes/langchain-chat/_langchain-chat.index'
 import { Route as ChatChatIndexImport } from './routes/chat/_chat.index'
+import { Route as OllamaOllamaIdImport } from './routes/ollama/_ollama.$id'
 import { Route as LangchainChatLangchainChatIdImport } from './routes/langchain-chat/_langchain-chat.$id'
 import { Route as ChatChatIdImport } from './routes/chat/_chat.$id'
 
 // Create/Update Routes
+
+const OllamaRoute = OllamaImport.update({
+  path: '/ollama',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LangchainChatRoute = LangchainChatImport.update({
   path: '/langchain-chat',
@@ -50,6 +59,11 @@ const KnowledgeIndexRoute = KnowledgeIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const OllamaOllamaRoute = OllamaOllamaImport.update({
+  id: '/_ollama',
+  getParentRoute: () => OllamaRoute,
+} as any)
+
 const KnowledgeIdRoute = KnowledgeIdImport.update({
   path: '/knowledge/$id',
   getParentRoute: () => rootRoute,
@@ -58,6 +72,11 @@ const KnowledgeIdRoute = KnowledgeIdImport.update({
 const ChatChatRoute = ChatChatImport.update({
   id: '/_chat',
   getParentRoute: () => ChatRoute,
+} as any)
+
+const OllamaOllamaIndexRoute = OllamaOllamaIndexImport.update({
+  path: '/',
+  getParentRoute: () => OllamaOllamaRoute,
 } as any)
 
 const LangchainChatLangchainChatIndexRoute =
@@ -69,6 +88,11 @@ const LangchainChatLangchainChatIndexRoute =
 const ChatChatIndexRoute = ChatChatIndexImport.update({
   path: '/',
   getParentRoute: () => ChatChatRoute,
+} as any)
+
+const OllamaOllamaIdRoute = OllamaOllamaIdImport.update({
+  path: '/$id',
+  getParentRoute: () => OllamaOllamaRoute,
 } as any)
 
 const LangchainChatLangchainChatIdRoute =
@@ -107,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangchainChatImport
       parentRoute: typeof rootRoute
     }
+    '/ollama': {
+      id: '/ollama'
+      path: '/ollama'
+      fullPath: '/ollama'
+      preLoaderRoute: typeof OllamaImport
+      parentRoute: typeof rootRoute
+    }
     '/chat/_chat': {
       id: '/chat/_chat'
       path: ''
@@ -120,6 +151,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/knowledge/$id'
       preLoaderRoute: typeof KnowledgeIdImport
       parentRoute: typeof rootRoute
+    }
+    '/ollama/_ollama': {
+      id: '/ollama/_ollama'
+      path: ''
+      fullPath: '/ollama'
+      preLoaderRoute: typeof OllamaOllamaImport
+      parentRoute: typeof OllamaImport
     }
     '/knowledge/': {
       id: '/knowledge/'
@@ -149,6 +187,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangchainChatLangchainChatIdImport
       parentRoute: typeof LangchainChatImport
     }
+    '/ollama/_ollama/$id': {
+      id: '/ollama/_ollama/$id'
+      path: '/$id'
+      fullPath: '/ollama/$id'
+      preLoaderRoute: typeof OllamaOllamaIdImport
+      parentRoute: typeof OllamaOllamaImport
+    }
     '/chat/_chat/': {
       id: '/chat/_chat/'
       path: '/'
@@ -162,6 +207,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/langchain-chat/'
       preLoaderRoute: typeof LangchainChatLangchainChatIndexImport
       parentRoute: typeof LangchainChatImport
+    }
+    '/ollama/_ollama/': {
+      id: '/ollama/_ollama/'
+      path: '/'
+      fullPath: '/ollama/'
+      preLoaderRoute: typeof OllamaOllamaIndexImport
+      parentRoute: typeof OllamaOllamaImport
     }
   }
 }
@@ -180,6 +232,12 @@ export const routeTree = rootRoute.addChildren({
     LangchainChatLangchainChatIdRoute,
     LangchainChatLangchainChatIndexRoute,
   }),
+  OllamaRoute: OllamaRoute.addChildren({
+    OllamaOllamaRoute: OllamaOllamaRoute.addChildren({
+      OllamaOllamaIdRoute,
+      OllamaOllamaIndexRoute,
+    }),
+  }),
   KnowledgeIdRoute,
   KnowledgeIndexRoute,
   TranslateIndexRoute,
@@ -196,6 +254,7 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/chat",
         "/langchain-chat",
+        "/ollama",
         "/knowledge/$id",
         "/knowledge/",
         "/translate/"
@@ -217,6 +276,12 @@ export const routeTree = rootRoute.addChildren({
         "/langchain-chat/_langchain-chat/"
       ]
     },
+    "/ollama": {
+      "filePath": "ollama.tsx",
+      "children": [
+        "/ollama/_ollama"
+      ]
+    },
     "/chat/_chat": {
       "filePath": "chat/_chat.tsx",
       "parent": "/chat",
@@ -227,6 +292,14 @@ export const routeTree = rootRoute.addChildren({
     },
     "/knowledge/$id": {
       "filePath": "knowledge/$id.tsx"
+    },
+    "/ollama/_ollama": {
+      "filePath": "ollama/_ollama.tsx",
+      "parent": "/ollama",
+      "children": [
+        "/ollama/_ollama/$id",
+        "/ollama/_ollama/"
+      ]
     },
     "/knowledge/": {
       "filePath": "knowledge/index.tsx"
@@ -242,6 +315,10 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "langchain-chat/_langchain-chat.$id.tsx",
       "parent": "/langchain-chat"
     },
+    "/ollama/_ollama/$id": {
+      "filePath": "ollama/_ollama.$id.tsx",
+      "parent": "/ollama/_ollama"
+    },
     "/chat/_chat/": {
       "filePath": "chat/_chat.index.tsx",
       "parent": "/chat/_chat"
@@ -249,6 +326,10 @@ export const routeTree = rootRoute.addChildren({
     "/langchain-chat/_langchain-chat/": {
       "filePath": "langchain-chat/_langchain-chat.index.tsx",
       "parent": "/langchain-chat"
+    },
+    "/ollama/_ollama/": {
+      "filePath": "ollama/_ollama.index.tsx",
+      "parent": "/ollama/_ollama"
     }
   }
 }
