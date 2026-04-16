@@ -60,7 +60,7 @@ export const deleteChatById = async (id: string) => {
 
 export const updateTitleById = async (id: string, title) => {
   try {
-    const res = await request.put("/api/chat/" + id +"/title", { title: title });
+    const res = await request.put("/api/chat/" + id + "/title", { title: title });
     return res;
   } catch (error) {
     console.error(error);

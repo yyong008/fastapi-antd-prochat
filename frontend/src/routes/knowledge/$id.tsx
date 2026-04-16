@@ -1,10 +1,6 @@
 import { Button, FloatButton, Upload, message } from "antd";
 import { CheckCard, ProCard } from "@ant-design/pro-components";
-import {
-  FileTextOutlined,
-  HomeOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { FileTextOutlined, HomeOutlined, UploadOutlined } from "@ant-design/icons";
 import { Link, createFileRoute, useParams } from "@tanstack/react-router";
 import { addFileToKnowledge, getKnowledgeById } from "../../apis/knowledge";
 import { useEffect, useState } from "react";
@@ -45,11 +41,7 @@ function RoutComponent() {
       </div>
       <UploadFileContent id={id} getData={getData} />
       <div className="flex gap-3">
-        <FileList
-          files={data.files}
-          selectFile={selectFile}
-          setSelectFile={setSelectFile}
-        />
+        <FileList files={data.files} selectFile={selectFile} setSelectFile={setSelectFile} />
         <FileContent files={data.files} selectFile={selectFile} />
       </div>
       <div>
@@ -80,7 +72,7 @@ function UploadFileContent(props) {
         });
 
         console.log("File content:", response.content);
-        props.getData()
+        props.getData();
       } else {
         message.error("服务器未返回文件内容");
       }

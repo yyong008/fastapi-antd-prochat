@@ -1,16 +1,12 @@
 import { EditOutlined, HomeOutlined, MenuOutlined } from "@ant-design/icons";
 import { Input, Modal, Popover, Spin, message } from "antd";
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from "@tanstack/react-router";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { deleteChatById, updateTitleById } from "../../apis/langchain-chat";
 import { useContext, useEffect, useState } from "react";
 
 import { chatContext } from "../../context/index";
 
-export const ChatSide = ({ isLoading}) => {
+export const ChatSide = ({ isLoading }) => {
   const { chats } = useContext(chatContext) as any;
   return (
     <div className="w-[200px] text-white p-[20px] h-[100vh] overflow-y-scroll bg-gray-600">
@@ -94,8 +90,12 @@ function Content(props) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="cursor-pointer" onClick={handleDelete}>删除</div>
-      <div className="cursor-pointer" onClick={handleModifyTitle}>修改标题</div>
+      <div className="cursor-pointer" onClick={handleDelete}>
+        删除
+      </div>
+      <div className="cursor-pointer" onClick={handleModifyTitle}>
+        修改标题
+      </div>
       {showTitle && (
         <TitleModal
           id={props.id}

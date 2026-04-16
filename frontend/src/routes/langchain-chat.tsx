@@ -15,13 +15,13 @@ export const Route = createFileRoute("/langchain-chat")({
 function ChatComponent() {
   const chatIdRef = useRef(null);
   const [chats, setChats] = useState([]);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const getData = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const res: any = await getChats();
     if (res && res.code === 0) {
       setChats(res.data);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
   useEffect(() => {

@@ -16,7 +16,7 @@ export const getKnowledgeById = async (id) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 export const createKnowledge = async (data) => {
   try {
@@ -25,7 +25,7 @@ export const createKnowledge = async (data) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 export const deleteKnowledge = async (id) => {
   try {
@@ -34,7 +34,7 @@ export const deleteKnowledge = async (id) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 export const addFileToKnowledge = async (id, data) => {
   try {
@@ -43,4 +43,4 @@ export const addFileToKnowledge = async (id, data) => {
   } catch (error) {
     console.error(error);
   }
-}
+};

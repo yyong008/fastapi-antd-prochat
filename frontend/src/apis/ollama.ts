@@ -9,7 +9,7 @@ export const getResponse = async (model_name: string, data: any) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }
+    },
   );
 
   if (!response.ok) {
@@ -27,7 +27,7 @@ export const getResponseUpdate = async (id, model_name: string, data: any) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }
+    },
   );
   if (response && !response.ok) {
     throw new Error("Network response was not ok");

@@ -13,13 +13,13 @@ export const Route = createFileRoute("/knowledge/")({
 
 function RouteCm() {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const getData = async () => {
-    setLoading(true)
+    setLoading(true);
     const result: any = await getKnowledges();
     setData(result);
-    setLoading(false)
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function RouteCm() {
       </div>
       <CreateKnowledgeModal />
       <Spin spinning={loading}>
-        <KnowledgeList list={data || []} getData={getData}/>
+        <KnowledgeList list={data || []} getData={getData} />
       </Spin>
       <div>
         <Link to="/">
@@ -67,12 +67,7 @@ function CreateKnowledgeModal(props) {
           onCancel={() => setVisible(false)}
         >
           <Form form={form}>
-            <Form.Item
-              label="name"
-              name="name"
-              labelCol={{ span: 5 }}
-              required={true}
-            >
+            <Form.Item label="name" name="name" labelCol={{ span: 5 }} required={true}>
               <Input />
             </Form.Item>
             <Form.Item
@@ -91,12 +86,12 @@ function CreateKnowledgeModal(props) {
 }
 
 function KnowledgeList({ list, getData }) {
-  if(!list) return null
+  if (!list) return null;
   if (list?.length === 0) return <div>暂无数据</div>;
   return (
     <div className="flex flex-wrap gap-3">
       {list?.map((item) => {
-        return <KnowledgeCard item={item} getData={getData}/>;
+        return <KnowledgeCard item={item} getData={getData} />;
       })}
     </div>
   );
@@ -104,7 +99,11 @@ function KnowledgeList({ list, getData }) {
 
 function KnowledgeCard({ item, getData }) {
   return (
-    <Card title="知识库" className="w-[300px]" extra={<TooltipDelete id={item.id} getData={getData} />}>
+    <Card
+      title="知识库"
+      className="w-[300px]"
+      extra={<TooltipDelete id={item.id} getData={getData} />}
+    >
       <Link to={"/knowledge/" + item.id}>
         <div className="text-[20px] font-bold">{item.name}</div>
         <div className="text-gray-500 text-[12px] mt-[20px]">{item.description}</div>
@@ -112,12 +111,12 @@ function KnowledgeCard({ item, getData }) {
     </Card>
   );
 }
-  
-function TooltipDelete({id,getData}) {
+
+function TooltipDelete({ id, getData }) {
   const deleteKnowledgeHandler = async () => {
-    const result = await deleteKnowledge(id)
-    getData()
-  }
+    const result = await deleteKnowledge(id);
+    getData();
+  };
   return (
     <Tooltip title="删除">
       <MoreOutlined onClick={deleteKnowledgeHandler} />

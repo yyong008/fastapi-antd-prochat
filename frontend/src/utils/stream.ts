@@ -1,4 +1,4 @@
-export function genResponseStream(response: any, chatIdRef , cb?: (...args) => any) {
+export function genResponseStream(response: any, chatIdRef, cb?: (...args) => any) {
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8");
   const encoder = new TextEncoder();
@@ -9,9 +9,9 @@ export function genResponseStream(response: any, chatIdRef , cb?: (...args) => a
         (async () => {
           while (true) {
             const { done, value } = await reader.read();
-            
+
             if (done) {
-              cb?.()
+              cb?.();
               controller.close();
               break;
             }
@@ -28,8 +28,8 @@ export function genResponseStream(response: any, chatIdRef , cb?: (...args) => a
                 // 解析 JSON 数据
                 try {
                   const parsedData = JSON.parse(data);
-                  console.log("x", done, parsedData)
-                  if (!chatIdRef.current)  chatIdRef.current = parsedData.id;
+                  console.log("x", done, parsedData);
+                  if (!chatIdRef.current) chatIdRef.current = parsedData.id;
                   controller.enqueue(encoder.encode(parsedData.content)); // 将内容写入流
                 } catch (e) {
                   controller.close();

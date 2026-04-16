@@ -1,4 +1,6 @@
-* {
-  padding: 0;
-  margin: 0;
-}
+/*
+ * 勿在此使用 * { margin:0; padding:0 } 等「全选重置」：
+ * - Tailwind 4 已在 tailwind.css 里带了一套 preflight（含 box-sizing、标题/列表等）
+ * - Ant Design 用 CSS-in-js 给组件写了具体类名与 token，额外全局清零会与二者叠在一起，偶发出现间距、边框、列表样式异常
+ * 需要覆盖 antd 某组件时，优先用 ConfigProvider theme、antd 的 className/style，或对包裹层加明确 class
+ */

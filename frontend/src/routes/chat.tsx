@@ -15,13 +15,13 @@ export const Route = createFileRoute("/chat")({
 function ChatComponent() {
   const chatIdRef = useRef(null);
   const [chats, setChats] = useState([]);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const getData = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const res: any = await getChats();
     if (res && res.code === 0) {
       setChats(res.data);
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -39,7 +39,7 @@ function ChatComponent() {
       <Layout>
         <div className="w-[100%] h-[100vh] flex no-wrap">
           <Sider>
-            <ChatSide isLoading={isLoading}/>
+            <ChatSide isLoading={isLoading} />
           </Sider>
           <Content>
             <Outlet />
