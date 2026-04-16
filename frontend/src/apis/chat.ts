@@ -1,7 +1,7 @@
 import request from "../utils/request";
 
 export const getResponse = async (data: any) => {
-  const response = await fetch("http://localhost:7788/api/chat", {
+  const response = await fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export const getResponse = async (data: any) => {
 };
 
 export const getResponseUpdate = async (id, data: any) => {
-  const response = await fetch("http://localhost:7788/api/chat/" + id, {
+  const response = await fetch("/api/chat/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

@@ -2,7 +2,7 @@ import request from "../utils/request";
 
 export const getResponse = async (model_name: string, data: any) => {
   const response = await fetch(
-    "http://localhost:7788/api/ollama-chat/chat?model_name=" + model_name,
+    "/api/ollama-chat/chat?model_name=" + model_name,
     {
       method: "POST",
       headers: {
@@ -20,7 +20,7 @@ export const getResponse = async (model_name: string, data: any) => {
 
 export const getResponseUpdate = async (id, model_name: string, data: any) => {
   const response = await fetch(
-    "http://localhost:7788/api/ollama-chat/chat/" + id + "?model_name=" + model_name,
+    "/api/ollama-chat/chat/" + id + "?model_name=" + model_name,
     {
       method: "PUT",
       headers: {

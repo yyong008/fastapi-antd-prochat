@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:7788", // 你的后端服务器地址
+        target: "http://localhost:8000", // 你的后端服务器地址
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/api"), // 重写路径
       },

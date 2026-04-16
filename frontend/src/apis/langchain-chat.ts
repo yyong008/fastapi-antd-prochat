@@ -1,7 +1,7 @@
 import request from "../utils/request";
 
 export const getResponse = async (data: any) => {
-  const response = await fetch("http://localhost:7788/api/langchain-chat/chat", {
+  const response = await fetch("/api/langchain-chat/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export const getResponse = async (data: any) => {
 };
 
 export const getResponseUpdate = async (id, data: any) => {
-  const response = await fetch("http://localhost:7788/api/langchain-chat/chat/" + id, {
+  const response = await fetch("/api/langchain-chat/chat/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

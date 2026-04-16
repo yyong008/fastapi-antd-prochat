@@ -29,7 +29,7 @@ poetry shell  # 进入虚拟环境
 # 指定环境变量
 
 # 运行环境
-poetry run main.py
+poetry run python main.py
 ```
 
 ### 环境变量

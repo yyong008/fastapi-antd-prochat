@@ -35,7 +35,7 @@ app.add_middleware(
 
 def start():
   import uvicorn
-  uvicorn.run("main:app", reload=True, port=7788)
+  uvicorn.run("main:app", reload=True, port=8000)
 
 if __name__ == "__main__":
   start()
