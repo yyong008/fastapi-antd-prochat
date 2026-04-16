@@ -1,9 +1,10 @@
-import { Button, FloatButton, Input, Select, message } from "antd";
+import { Button, Card, Input, Select, Space, message } from "antd";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
-import { HomeOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { createTranslate } from "../../apis/transalte";
 import { useState } from "react";
+import { useTheme } from "antd-style";
 
 export const Route = createFileRoute("/translate/")({
   component: RouteComponent,
@@ -25,6 +26,7 @@ const options = [
 ];
 
 function RouteComponent() {
+  const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     lang_from: "",
@@ -34,84 +36,100 @@ function RouteComponent() {
   });
 
   return (
-    <div className="flex flex-col w-[100vw] h-[100vh]  items-center gap-6 bg-[url('https://images.pexels.com/photos/8386487/pexels-photo-8386487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')]">
-      <div>
-        <Link to="/">
-          <FloatButton type="primary" icon={<HomeOutlined />}></FloatButton>
-        </Link>
-      </div>
-      <div className="flex flex-col justify-end items-center ">
-        <div className="text-[50px] font-boldchat">AI 翻译</div>
-        <div className="text-[20px]">选择语言</div>
-        <div className="flex gap-3 my-[20px]">
-          <div>
-            <Select
-              className="w-[200px]"
-              options={options}
-              placeholder="选择语言"
-              onChange={(value) => {
-                setData((prev) => ({ ...prev, lang_from: value }));
-              }}
-            ></Select>
-          </div>
-          <div>
-            <Select
-              className="w-[200px]"
-              options={options}
-              placeholder="选择语言"
-              onChange={(value) => {
-                setData((prev) => ({ ...prev, lang_to: value }));
-              }}
-            ></Select>
-          </div>
+    <div
+      className="min-h-dvh w-full"
+      style={{
+        background: theme.colorBgLayout,
+        color: theme.colorText,
+      }}
+    >
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6">
+        <div className="flex items-center gap-3">
+          <Link to="/">
+            <Button type="text" icon={<ArrowLeftOutlined />}>
+              返回首页
+            </Button>
+          </Link>
         </div>
-      </div>
-      <div className="flex gap-3 ">
-        <div>
-          <Input.TextArea
-            style={{
-              height: "100%",
-            }}
-            className="w-[600px]"
-            value={data.content}
-            onChange={(e) => {
-              setData((prev) => ({ ...prev, content: e.target.value }));
-            }}
-          />
-        </div>
-        <div className="h-[300px] ">
-          <Input.TextArea
-            style={{
-              height: "100%",
-            }}
-            className="w-[600px]"
-            value={data.content_t}
-          />
-        </div>
-      </div>
-      <div>
-        <Button
-          type="primary"
-          loading={loading}
-          onClick={async () => {
-            if (!data.lang_from || !data.lang_to || !data.content) {
-              message.error("请填写完整");
-              return;
-            }
-            setLoading(true);
-            const res: any = await createTranslate(data);
-            setLoading(false);
-            if (res && res.code === 0) {
-              setData((prev) => ({ ...prev, content_t: res.data }));
-              return;
-            }
 
-            message.error(res.message);
-            return;
-          }}
-        >
-          翻译
-        </Button>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">AI 翻译</h1>
+          <p className="mt-1 text-sm" style={{ color: theme.colorTextSecondary }}>
+            选择源语言与目标语言，输入原文后点击翻译。
+          </p>
+        </div>
+
+        <Card styles={{ body: { padding: 20 } }}>
+          <Space direction="vertical" size="middle" className="w-full">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Select
+                className="min-w-[min(100%,200px)] sm:w-48"
+                options={options}
+                placeholder="源语言"
+                onChange={(value) => {
+                  setData((prev) => ({ ...prev, lang_from: value }));
+                }}
+              />
+              <Select
+                className="min-w-[min(100%,200px)] sm:w-48"
+                options={options}
+                placeholder="目标语言"
+                onChange={(value) => {
+                  setData((prev) => ({ ...prev, lang_to: value }));
+                }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="flex min-h-[220px] flex-col gap-2">
+                <span className="text-xs font-medium" style={{ color: theme.colorTextSecondary }}>
+                  原文
+                </span>
+                <Input.TextArea
+                  className="min-h-[200px] flex-1 font-sans text-base leading-relaxed"
+                  placeholder="在此输入要翻译的文本"
+                  value={data.content}
+                  onChange={(e) => {
+                    setData((prev) => ({ ...prev, content: e.target.value }));
+                  }}
+                />
+              </div>
+              <div className="flex min-h-[220px] flex-col gap-2">
+                <span className="text-xs font-medium" style={{ color: theme.colorTextSecondary }}>
+                  译文
+                </span>
+                <Input.TextArea
+                  readOnly
+                  className="min-h-[200px] flex-1 font-sans text-base leading-relaxed"
+                  style={{ background: theme.colorFillTertiary }}
+                  placeholder="译文将显示在这里"
+                  value={data.content_t}
+                />
+              </div>
+            </div>
+
+            <Button
+              type="primary"
+              loading={loading}
+              onClick={async () => {
+                if (!data.lang_from || !data.lang_to || !data.content) {
+                  message.error("请填写完整");
+                  return;
+                }
+                setLoading(true);
+                const res: { code?: number; data?: string; message?: string } = await createTranslate(data);
+                setLoading(false);
+                if (res && res.code === 0) {
+                  setData((prev) => ({ ...prev, content_t: res.data ?? "" }));
+                  return;
+                }
+                message.error(res?.message ?? "翻译失败");
+              }}
+            >
+              翻译
+            </Button>
+          </Space>
+        </Card>
       </div>
     </div>
   );

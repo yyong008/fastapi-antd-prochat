@@ -1,24 +1,35 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
-import { Select } from "antd";
+import { Select, Typography } from "antd";
+import { useTheme } from "antd-style";
+
+import { chatWorkspaceInnerClass } from "../_sharedUi";
 
 export const Route = createFileRoute("/chat/_chat")({
   component: ChatLayoutRoute,
 });
 
 function ChatLayoutRoute() {
+  const theme = useTheme();
+
   return (
-    <div className="flex justify-center items-center w-[100%]">
-      <div className="flex flex-col  items-center w-[80%] h-[94vh]">
-        <div className="flex justify-center items-center pt-[20px]">
-          <span>模型：</span>
-          <Select
-            defaultValue="glm-4-flash"
-            style={{ width: 120 }}
-            onChange={() => {}}
-            options={[{ value: "glm-4-flesh", label: "glm-4-flash" }]}
-          />
-        </div>
+    <div className={`${chatWorkspaceInnerClass} gap-3`}>
+      <div
+        className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b pb-3 sm:justify-end"
+        style={{ borderColor: theme.colorBorderSecondary }}
+      >
+        <Typography.Text type="secondary" className="text-sm">
+          模型
+        </Typography.Text>
+        <Select
+          className="min-w-[min(100%,200px)]"
+          defaultValue="glm-4-flash"
+          onChange={() => {}}
+          options={[{ value: "glm-4-flash", label: "glm-4-flash" }]}
+          popupMatchSelectWidth={false}
+        />
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <Outlet />
       </div>
     </div>

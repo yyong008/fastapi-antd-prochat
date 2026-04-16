@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { ChatSide } from "../components/ChatSideOllama";
 import { Layout } from "antd";
+import { useTheme } from "antd-style";
 import { chatContext } from "../context/index";
 import { getChats } from "../apis/chat";
 
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/ollama")({
 });
 
 function ChatComponent() {
+  const theme = useTheme();
   const chatIdRef = useRef(null);
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,12 +38,15 @@ function ChatComponent() {
 
   return (
     <chatContext.Provider value={{ chats: chats, setChats: setChats, getData: getData }}>
-      <Layout>
-        <div className="w-[100%] h-[100vh] flex no-wrap">
-          <Sider>
+      <Layout className="min-h-dvh">
+        <div className="flex h-dvh w-full min-h-0 flex-nowrap overflow-hidden">
+          <Sider width={220} className="overflow-y-auto" style={{ background: theme.colorBgContainer }}>
             <ChatSide isLoading={isLoading} />
           </Sider>
-          <Content>
+          <Content
+            className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            style={{ background: theme.colorBgLayout, margin: 0 }}
+          >
             <Outlet />
           </Content>
         </div>

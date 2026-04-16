@@ -7,12 +7,12 @@ import {
   CloudServerOutlined,
   MessageOutlined,
   RobotOutlined,
+  ThunderboltOutlined,
   TranslationOutlined,
 } from "@ant-design/icons";
 import { Button } from "antd";
 import { useTheme } from "antd-style";
 
-import { GlobalAppShell } from "../components/GlobalAppShell";
 import { APP_MODULES } from "../config/navigation";
 
 export const Route = createFileRoute("/")({
@@ -97,8 +97,13 @@ function HomeRoute() {
   };
 
   return (
-    <GlobalAppShell>
-      <div className="relative min-h-full font-sans antialiased" style={{ color: theme.colorText }}>
+    <div
+      className="relative flex min-h-dvh flex-col font-sans antialiased"
+      style={{ background: theme.colorBgLayout, color: theme.colorText }}
+    >
+      <HomeTopNav />
+
+      <div className="relative min-h-0 flex-1" style={{ color: theme.colorText }}>
         {/* 背景 */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute inset-0" style={{ background: meshBg }} />
@@ -131,20 +136,23 @@ function HomeRoute() {
               生产级 AI 对话工作台 · v2
             </div>
 
-            <h1 className="mx-auto max-w-[18ch] text-balance text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl md:leading-[1.05]">
-              <span style={{ color: theme.colorText }}>构建你的</span>
-              <br />
-              <span style={gradientTitle}>智能对话体验</span>
+            <h1 className="mx-auto w-full max-w-3xl text-center text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl md:leading-[1.05]">
+              <span className="block" style={{ color: theme.colorText }}>
+                构建你的
+              </span>
+              <span
+                className="mt-1 block sm:mt-1.5"
+                style={{
+                  ...gradientTitle,
+                  textAlign: "center",
+                  display: "block",
+                }}
+              >
+                智能对话体验
+              </span>
             </h1>
 
-            <p
-              className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed sm:text-lg"
-              style={{ color: theme.colorTextSecondary }}
-            >
-              左侧导航与内页 Layout 一致；右侧为各模块工作区。后端由 FastAPI 驱动，可按业务扩展模型与工具链。
-            </p>
-
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12 sm:flex-row sm:gap-4">
               <Link to="/chat">
                 <Button
                   type="primary"
@@ -182,7 +190,7 @@ function HomeRoute() {
 
           {/* 主模块 + 栅格 */}
           <section className="mt-20 sm:mt-24">
-            <div className="mb-8 flex flex-col gap-1 sm:mb-10">
+            <div className="mb-8 flex flex-col items-center gap-1 text-center sm:mb-10">
               <span
                 className="text-xs font-semibold uppercase tracking-[0.2em]"
                 style={{ color: theme.colorTextTertiary ?? theme.colorTextSecondary }}
@@ -190,8 +198,11 @@ function HomeRoute() {
                 Modules
               </span>
               <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">选择工作区</h2>
-              <p className="max-w-lg text-sm sm:text-base" style={{ color: theme.colorTextSecondary }}>
-                以下为常用能力入口，与侧栏导航一一对应。
+              <p
+                className="mx-auto max-w-lg text-sm sm:text-base"
+                style={{ color: theme.colorTextSecondary }}
+              >
+                以下为常用能力入口，与顶部导航一致。
               </p>
             </div>
 
@@ -215,7 +226,10 @@ function HomeRoute() {
               color: theme.colorTextTertiary ?? theme.colorTextSecondary,
             }}
           >
-            <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: theme.colorText }}>
+            <div
+              className="flex items-center justify-center gap-2 text-sm font-semibold"
+              style={{ color: theme.colorText }}
+            >
               <span
                 className="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold text-white"
                 style={{
@@ -232,7 +246,56 @@ function HomeRoute() {
           </footer>
         </div>
       </div>
-    </GlobalAppShell>
+    </div>
+  );
+}
+
+function HomeTopNav() {
+  const theme = useTheme();
+
+  return (
+    <header
+      className="sticky top-0 z-30 shrink-0 border-b backdrop-blur-md"
+      style={{
+        borderColor: theme.colorBorderSecondary,
+        backgroundColor: `${theme.colorBgContainer}e8`,
+      }}
+    >
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:gap-4 sm:px-6">
+        <Link to="/" className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3">
+          <span
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white shadow-sm"
+            style={{
+              background: `linear-gradient(145deg, ${theme.colorPrimary}, ${theme.colorPrimaryActive})`,
+            }}
+          >
+            F
+          </span>
+          <span className="truncate text-[15px] font-bold tracking-tight">FastAPI ProChat</span>
+        </Link>
+
+        <nav
+          className="flex min-w-0 flex-1 items-center justify-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-0.5 [&::-webkit-scrollbar]:hidden"
+          aria-label="模块导航"
+        >
+          {APP_MODULES.map((m) => (
+            <Link key={m.to} to={m.to} className="shrink-0">
+              <Button type="text" size="small" style={{ color: theme.colorTextSecondary }}>
+                {m.shortLabel}
+              </Button>
+            </Link>
+          ))}
+        </nav>
+
+        <div className="shrink-0">
+          <Link to="/chat">
+            <Button type="primary" size="small" icon={<ThunderboltOutlined />} className="font-semibold!">
+              开始对话
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </header>
   );
 }
 

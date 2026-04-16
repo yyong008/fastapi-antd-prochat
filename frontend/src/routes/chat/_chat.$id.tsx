@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProChat } from "@ant-design/pro-chat";
 import { genResponseStream } from "../../utils/stream";
 import { message } from "antd";
-import { useTheme } from "antd-style";
+import { useProChatSurfaceStyle } from "../_sharedUi";
 
 export const Route = createFileRoute("/chat/_chat/$id")({
   component: ChatComponent,
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/chat/_chat/$id")({
 function ChatComponent() {
   const { id } = useParams({ strict: false });
   const [loading, setLoading] = useState(false);
-  const theme = useTheme();
+  const proChatStyle = useProChatSurfaceStyle();
   const chatIdRef = useRef(null);
   const nav = useNavigate();
 
@@ -56,9 +56,8 @@ function ChatComponent() {
     <>
       <ProChat
         loading={loading}
-        style={{
-          background: theme.colorBgLayout,
-        }}
+        className="min-h-0 flex-1"
+        style={proChatStyle}
         initialChats={initialChats}
         request={async (chats) => {
           const messages = chats.map((chat) => ({

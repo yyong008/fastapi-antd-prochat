@@ -7,7 +7,7 @@ import { genResponseStream } from "../../utils/stream";
 import { getResponse } from "../../apis/ollama";
 import { message } from "antd";
 import { ollamaContext } from "../../context";
-import { useTheme } from "antd-style";
+import { useProChatSurfaceStyle } from "../_sharedUi";
 
 export const Route = createFileRoute("/ollama/_ollama/")({
   component: ChatComponent,
@@ -17,7 +17,7 @@ function ChatComponent() {
   const oc = useContext(ollamaContext) as any;
   const nav = useNavigate();
   const context = useContext(chatContext) as any;
-  const theme = useTheme();
+  const proChatStyle = useProChatSurfaceStyle();
   const chatIdRef = useRef(null);
   const firstChatCompleted = async () => {
     await context.getData();
@@ -33,9 +33,8 @@ function ChatComponent() {
   return (
     <>
       <ProChat
-        style={{
-          background: theme.colorBgLayout,
-        }}
+        className="min-h-0 flex-1"
+        style={proChatStyle}
         request={async (chats) => {
           const messages = chats.map((chat) => ({
             id: chatIdRef.current || "",

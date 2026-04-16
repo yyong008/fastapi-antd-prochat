@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProChat } from "@ant-design/pro-chat";
 import { genResponseStream } from "../../utils/stream";
 import { message } from "antd";
-import { useTheme } from "antd-style";
+import { chatWorkspaceInnerClass, useProChatSurfaceStyle } from "../_sharedUi";
 
 export const Route = createFileRoute("/langchain-chat/_langchain-chat/$id")({
   component: ChatComponent,
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/langchain-chat/_langchain-chat/$id")({
 function ChatComponent() {
   const { id } = useParams({ strict: false });
   const [loading, setLoading] = useState(false);
-  const theme = useTheme();
+  const proChatStyle = useProChatSurfaceStyle();
   const chatIdRef = useRef(null);
   const nav = useNavigate();
 
@@ -53,12 +53,12 @@ function ChatComponent() {
   }, [id]);
   if (initialChats.length === 0) return null;
   return (
-    <>
-      <ProChat
-        loading={loading}
-        style={{
-          background: theme.colorBgLayout,
-        }}
+    <div className={chatWorkspaceInnerClass}>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <ProChat
+          loading={loading}
+          className="min-h-0 flex-1"
+          style={proChatStyle}
         initialChats={initialChats}
         request={async (chats) => {
           const messages = chats.map((chat) => ({
@@ -69,7 +69,8 @@ function ChatComponent() {
           const response = await getResponseUpdate(id, { messages });
           return new Response(genResponseStream(response.clone(), chatIdRef));
         }}
-      />
-    </>
+        />
+      </div>
+    </div>
   );
 }
